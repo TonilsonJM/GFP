@@ -5,10 +5,15 @@ import Link from 'next/link';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
@@ -83,11 +88,44 @@ export default function Home() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label="Menu"
+            >
               ☰
             </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-800">
+            <div className="px-4 py-4 space-y-3">
+              <a
+                href="#features"
+                onClick={closeMobileMenu}
+                className="block px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                Funcionalidades
+              </a>
+              <a
+                href="#benefits"
+                onClick={closeMobileMenu}
+                className="block px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                Benefícios
+              </a>
+              <Link
+                href="/auth/login"
+                onClick={closeMobileMenu}
+                className="block px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-center font-medium transition-all"
+              >
+                🔐 Entrar
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
