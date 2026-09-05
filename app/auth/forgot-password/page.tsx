@@ -1,55 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
-
-    if (!email.trim()) {
-      setError('Email é obrigatório');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError('Por favor, insira um email válido');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-
-      if (resetError) {
-        setError(resetError.message);
-      } else {
-        setSuccess(true);
-        setEmail('');
-      }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao enviar email de recuperação';
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="max-w-md mx-auto">
@@ -68,65 +21,20 @@ export default function ForgotPasswordPage() {
           <p className="text-slate-400">Insira seu email para receber um link de recuperação</p>
         </div>
 
+        {/* Disabled Feature Message */}
+        <div className="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-lg">
+          <p className="text-yellow-300 text-center font-medium">⚠️ Recurso temporariamente desabilitado</p>
+          <p className="text-yellow-300/80 text-center text-sm mt-2">
+            Essa funcionalidade está em manutenção. Por favor, tente novamente mais tarde.
+          </p>
+        </div>
+
         {/* Success Message */}
-        {success && (
-          <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
-            <p className="text-green-300 text-center font-medium">✅ Email enviado com sucesso!</p>
-            <p className="text-green-300/80 text-center text-sm mt-2">
-              Verifique seu email para o link de recuperação de senha
-            </p>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-center">
-            ❌ {error}
-          </div>
-        )}
-
-        {/* Form */}
-        {!success ? (
-          <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError(null);
-                }}
-                placeholder="seu@email.com"
-                className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
-                disabled={loading}
-                required
-              />
-              <p className="text-xs text-slate-400 mt-2">
-                Enviaremos um link de recuperação para este email
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 mt-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              {loading ? '⏳ Enviando...' : 'Enviar Link 📧'}
-            </button>
-          </form>
-        ) : (
-          <div className="mb-6 p-4 bg-blue-500/20 border border-blue-500/50 rounded-lg">
-            <p className="text-blue-300 text-center text-sm">
-              💡 Não recebeu? Verifique a pasta de spam ou tente novamente
-            </p>
-          </div>
-        )}
+        <div className="mb-6 p-4 bg-blue-500/20 border border-blue-500/50 rounded-lg">
+          <p className="text-blue-300 text-center text-sm">
+            💡 Se você esqueceu sua senha, entre em contato com nosso suporte
+          </p>
+        </div>
 
         {/* Divider */}
         <div className="flex items-center gap-4 mb-6">

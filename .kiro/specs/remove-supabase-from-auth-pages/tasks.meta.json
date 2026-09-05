@@ -1,0 +1,124 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Auditar uso de supabaseClient em todo o projeto": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633960302
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633976340
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634056640
+      }
+    ],
+    "2. Remover import e desabilitar formulário em forgot-password/page.tsx": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633960640
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634061257
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634105818
+      }
+    ],
+    "3. Adicionar placeholder funcional em forgot-password/page.tsx": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633960943
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634061598
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634106369
+      }
+    ],
+    "4. Executar build de verificação": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633961755
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634120067
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634821862
+      }
+    ],
+    "5. Testar página no desenvolvimento local": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633962386
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634120423
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634822420
+      }
+    ],
+    "6. Validar que supabaseClient.ts pode ser removido com segurança (apenas verificação, não remova ainda)": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633962690
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634826765
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634885347
+      }
+    ],
+    "7. Checkpoint - Verificar integridade da aplicação": [
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788633963008
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788634891543
+      },
+      {
+        "executionId": "a055c9fc-f89e-4aa4-9b13-1310048bf430",
+        "chatSessionId": "sess_869907c3-a942-4203-b9ac-d33a6bb57e25",
+        "timestamp": 1788635454152
+      }
+    ]
+  }
+}

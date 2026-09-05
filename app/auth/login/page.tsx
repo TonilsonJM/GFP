@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -48,29 +47,35 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      // Fazer login no Supabase
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
+      // Chamar API de login
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
-      if (signInError) {
-        setError(signInError.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Erro ao fazer login');
         setLoading(false);
         return;
       }
 
-      if (data.session) {
-        // Login bem-sucedido
-        setFormData({
-          email: '',
-          password: '',
-          rememberMe: false,
-        });
+      // Login bem-sucedido
+      setFormData({
+        email: '',
+        password: '',
+        rememberMe: false,
+      });
 
-        // Redirecionar para dashboard
-        router.push('/dashboard');
-      }
+      // Redirecionar para dashboard
+      router.push('/dashboard');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao fazer login';
       setError(errorMessage);

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -59,19 +58,23 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      // Registrar no Supabase
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            full_name: formData.name,
-          },
+      // Chamar API de registro
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
-      if (signUpError) {
-        setError(signUpError.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Erro ao registrar');
         setLoading(false);
         return;
       }

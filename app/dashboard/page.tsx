@@ -1,8 +1,25 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { logout } from '@/lib/authClient';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await logout();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
       {/* Animated Background Blobs */}
@@ -54,12 +71,13 @@ export default function DashboardPage() {
             <button className="px-4 py-2 rounded-full border-2 border-purple-500 text-purple-300 hover:text-white hover:bg-purple-500/10 font-semibold transition-all text-sm">
               👤 Perfil
             </button>
-            <Link
-              href="/"
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all text-sm"
+            <button
+              onClick={handleLogout}
+              disabled={loading}
+              className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all text-sm disabled:opacity-50"
             >
-              Sair
-            </Link>
+              {loading ? 'Saindo...' : 'Sair'}
+            </button>
           </div>
         </div>
       </nav>
