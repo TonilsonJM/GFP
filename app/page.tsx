@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,7 +55,7 @@ export default function Home() {
           <div className="flex items-center gap-2 group cursor-pointer">
             <span className="text-2xl">💰</span>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              FinFlow
+              FinJM
             </span>
           </div>
 
@@ -72,12 +73,12 @@ export default function Home() {
             >
               Benefícios
             </a>
-            <a
-              href="#"
+            <Link
+              href="/auth/login"
               className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-sm font-medium transition-all"
             >
               🔐 Entrar
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -118,12 +119,12 @@ export default function Home() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105">
+              <Link href="/auth/register" className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 inline-block text-center">
                 🚀 Começar Gratuitamente
-              </button>
-              <button className="px-8 py-3 rounded-full border-2 border-purple-500 text-purple-300 hover:text-white hover:bg-purple-500/10 font-semibold transition-all">
+              </Link>
+              <Link href="/auth/login" className="px-8 py-3 rounded-full border-2 border-purple-500 text-purple-300 hover:text-white hover:bg-purple-500/10 font-semibold transition-all inline-block text-center">
                 🔐 Fazer Login
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -133,7 +134,7 @@ export default function Home() {
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16">
-            Por que escolher FinFlow?
+            Por que escolher FinJM?
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -275,9 +276,9 @@ export default function Home() {
             <p className="text-slate-300 mb-8 text-lg">
               Comece sua jornada financeira agora. Sem cartão de crédito necessário.
             </p>
-            <button className="px-10 py-4 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold text-lg transition-all hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
+            <Link href="/auth/register" className="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold text-lg transition-all hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105">
               Começar Agora 🚀
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -289,7 +290,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 justify-center sm:justify-start mb-4">
                 <span className="text-2xl">💰</span>
-                <span className="text-lg font-bold">FinFlow</span>
+                <span className="text-lg font-bold">FinJM</span>
               </div>
             </div>
             <div className="flex gap-6 justify-center">
@@ -304,7 +305,7 @@ export default function Home() {
               </a>
             </div>
             <div className="text-slate-400 text-sm text-center sm:text-right">
-              © 2024 FinFlow. Todos os direitos reservados.
+              © 2026 FinJM. Todos os direitos reservados por TonilsonJM.
             </div>
           </div>
         </div>
