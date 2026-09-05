@@ -68,18 +68,22 @@ export default function LoginPage() {
       }
 
       // Login bem-sucedido
+      console.log('✅ Login realizado com sucesso para:', formData.email);
+      
       setFormData({
         email: '',
         password: '',
         rememberMe: false,
       });
 
-      // Redirecionar para dashboard
-      router.push('/dashboard');
+      // Aguardar um pouco antes de redirecionar para garantir que o cookie foi processado
+      setTimeout(() => {
+        console.log('🚀 Redirecionando para dashboard...');
+        router.push('/dashboard');
+      }, 500);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao fazer login';
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };

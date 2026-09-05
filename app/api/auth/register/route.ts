@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { hashPassword, createToken, setAuthCookie } from '@/lib/auth';
+import { hashPassword, createToken } from '@/lib/auth';
 import { supabaseServer } from '@/lib/supabaseServer';
 
 export async function POST(req: NextRequest) {
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (queryError) {
-      console.error('Erro ao verificar email:', queryError);
+      console.error('❌ Erro ao verificar email:', queryError);
       return NextResponse.json(
         { error: 'Erro ao verificar email' },
         { status: 500 }
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (insertError || !newUser) {
-      console.error('Erro ao inserir usuário:', insertError);
+      console.error('❌ Erro ao inserir usuário:', insertError);
       return NextResponse.json(
         { error: 'Erro ao criar conta' },
         { status: 500 }
@@ -85,12 +85,21 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
 
-    // Salvar token em cookie
-    await setAuthCookie(token);
+    // Configurar cookie de autenticação diretamente na resposta
+    response.cookies.set('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 dias
+      path: '/',
+    });
+
+    console.log('✅ Conta criada com sucesso para:', email);
+    console.log('🍪 Cookie de autenticação configurado');
 
     return response;
   } catch (err) {
-    console.error('Erro ao registrar:', err);
+    console.error('❌ Erro ao registrar:', err);
     return NextResponse.json(
       { error: 'Erro ao registrar' },
       { status: 500 }

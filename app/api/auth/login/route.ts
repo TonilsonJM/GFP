@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyPassword, createToken, setAuthCookie } from '@/lib/auth';
+import { verifyPassword, createToken } from '@/lib/auth';
 import { supabaseServer } from '@/lib/supabaseServer';
 
 export async function POST(req: NextRequest) {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (queryError) {
+      console.error('Erro ao buscar usuário:', queryError);
       return NextResponse.json(
         { error: 'Email ou senha inválido' },
         { status: 401 }
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
     // Criar token JWT
     const token = createToken(user.id, user.email);
 
-    // Criar response
+    // Criar response e configurar cookie diretamente
     const response = NextResponse.json(
       {
         success: true,
@@ -70,12 +71,21 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    // Salvar token em cookie
-    await setAuthCookie(token);
+    // Configurar cookie de autenticação diretamente na resposta
+    response.cookies.set('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 dias
+      path: '/',
+    });
+
+    console.log('✅ Login bem-sucedido para:', email);
+    console.log('🍪 Cookie de autenticação configurado');
 
     return response;
   } catch (err) {
-    console.error('Erro ao fazer login:', err);
+    console.error('❌ Erro ao fazer login:', err);
     return NextResponse.json(
       { error: 'Erro ao fazer login' },
       { status: 500 }
