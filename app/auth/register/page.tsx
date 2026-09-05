@@ -1,15 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -17,12 +23,76 @@ export default function RegisterPage() {
       ...prev,
       [name]: value,
     }));
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    if (!formData.name.trim()) {
+      setError('Nome é obrigatório');
+      return false;
+    }
+    if (!formData.email.trim()) {
+      setError('Email é obrigatório');
+      return false;
+    }
+    if (formData.password.length < 6) {
+      setError('Senha deve ter pelo menos 6 caracteres');
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError('Senhas não coincidem');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implementar lógica de registro
-    console.log('Registro:', formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Registrar no Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name,
+          },
+        },
+      });
+
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Sucesso
+      setSuccess(true);
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+
+      // Redirecionar para dashboard após sucesso
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 2000);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao registrar';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,6 +112,20 @@ export default function RegisterPage() {
           <p className="text-slate-400">Junte-se a milhares de usuários gerenciando suas finanças</p>
         </div>
 
+        {/* Success Message */}
+        {success && (
+          <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300 text-center">
+            ✅ Conta criada com sucesso! Redirecionando...
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-center">
+            ❌ {error}
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
           {/* Name Field */}
@@ -56,7 +140,8 @@ export default function RegisterPage() {
               value={formData.name}
               onChange={handleChange}
               placeholder="Seu nome"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -73,7 +158,8 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -90,7 +176,8 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -107,7 +194,8 @@ export default function RegisterPage() {
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -115,9 +203,10 @@ export default function RegisterPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 mt-6"
+            disabled={loading}
+            className="w-full py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 mt-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            Criar Conta 🎉
+            {loading ? '⏳ Criando conta...' : 'Criar Conta 🎉'}
           </button>
         </form>
 
@@ -130,10 +219,18 @@ export default function RegisterPage() {
 
         {/* Social Buttons */}
         <div className="space-y-3 mb-6">
-          <button className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
+          <button
+            type="button"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all disabled:opacity-50"
+          >
             📧 Continuar com Google
           </button>
-          <button className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
+          <button
+            type="button"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all disabled:opacity-50"
+          >
             🍎 Continuar com Apple
           </button>
         </div>

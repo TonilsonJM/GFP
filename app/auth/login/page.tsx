@@ -1,14 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -16,12 +21,61 @@ export default function LoginPage() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    if (!formData.email.trim()) {
+      setError('Email é obrigatório');
+      return false;
+    }
+    if (!formData.password) {
+      setError('Senha é obrigatória');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implementar lógica de login
-    console.log('Login:', formData);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fazer login no Supabase
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (signInError) {
+        setError(signInError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (data.session) {
+        // Login bem-sucedido
+        setFormData({
+          email: '',
+          password: '',
+          rememberMe: false,
+        });
+
+        // Redirecionar para dashboard
+        router.push('/dashboard');
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao fazer login';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +95,13 @@ export default function LoginPage() {
           <p className="text-slate-400">Entre na sua conta para continuar gerenciando</p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-center">
+            ❌ {error}
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
           {/* Email Field */}
@@ -55,7 +116,8 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -72,7 +134,8 @@ export default function LoginPage() {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all disabled:opacity-50"
+              disabled={loading}
               required
             />
           </div>
@@ -85,7 +148,8 @@ export default function LoginPage() {
                 name="rememberMe"
                 checked={formData.rememberMe}
                 onChange={handleChange}
-                className="w-4 h-4 rounded bg-white/10 border border-white/20 cursor-pointer accent-purple-500"
+                disabled={loading}
+                className="w-4 h-4 rounded bg-white/10 border border-white/20 cursor-pointer accent-purple-500 disabled:opacity-50"
               />
               <span className="text-slate-300">Lembrar-me</span>
             </label>
@@ -97,9 +161,10 @@ export default function LoginPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 mt-6"
+            disabled={loading}
+            className="w-full py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold transition-all hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 mt-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            Entrar 🚀
+            {loading ? '⏳ Autenticando...' : 'Entrar 🚀'}
           </button>
         </form>
 
@@ -112,10 +177,18 @@ export default function LoginPage() {
 
         {/* Social Buttons */}
         <div className="space-y-3 mb-6">
-          <button className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
+          <button
+            type="button"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all disabled:opacity-50"
+          >
             📧 Continuar com Google
           </button>
-          <button className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
+          <button
+            type="button"
+            disabled={loading}
+            className="w-full py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all disabled:opacity-50"
+          >
             🍎 Continuar com Apple
           </button>
         </div>
