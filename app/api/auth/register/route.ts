@@ -22,11 +22,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Verificar se email já existe
-    const { data: existingUser } = await supabaseServer
+    const { data: existingUser, error: queryError } = await supabaseServer
       .from('users_accounts')
       .select('id')
       .eq('email', email.toLowerCase())
-      .single();
+      .maybeSingle();
+
+    if (queryError) {
+      console.error('Erro ao verificar email:', queryError);
+      return NextResponse.json(
+        { error: 'Erro ao verificar email' },
+        { status: 500 }
+      );
+    }
 
     if (existingUser) {
       return NextResponse.json(

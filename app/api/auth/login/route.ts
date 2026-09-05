@@ -19,9 +19,16 @@ export async function POST(req: NextRequest) {
       .from('users_accounts')
       .select('*')
       .eq('email', email.toLowerCase())
-      .single();
+      .maybeSingle();
 
-    if (queryError || !user) {
+    if (queryError) {
+      return NextResponse.json(
+        { error: 'Email ou senha inválido' },
+        { status: 401 }
+      );
+    }
+
+    if (!user) {
       return NextResponse.json(
         { error: 'Email ou senha inválido' },
         { status: 401 }
