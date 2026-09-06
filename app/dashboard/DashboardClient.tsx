@@ -112,7 +112,7 @@ export default function DashboardClient() {
                 }}
               >
                 <p className="text-slate-400 mb-2">Saldo Total</p>
-                <p className="text-3xl font-bold text-green-400">R$ 0,00</p>
+                <p className="text-3xl font-bold text-green-400">Kz 0,00</p>
                 <p className="text-sm text-slate-500 mt-2">📈 Nenhuma transação ainda</p>
               </div>
 
@@ -125,7 +125,7 @@ export default function DashboardClient() {
                 }}
               >
                 <p className="text-slate-400 mb-2">Despesas do Mês</p>
-                <p className="text-3xl font-bold text-red-400">R$ 0,00</p>
+                <p className="text-3xl font-bold text-red-400">Kz 0,00</p>
                 <p className="text-sm text-slate-500 mt-2">📊 Sem gastos registrados</p>
               </div>
 
