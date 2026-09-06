@@ -76,6 +76,9 @@ export default function LoginPage() {
         rememberMe: false,
       });
 
+      // ✅ Resetar estado de carregamento
+      setLoading(false);
+
       // Aguardar um pouco antes de redirecionar para garantir que o cookie foi processado
       setTimeout(() => {
         console.log('🚀 Redirecionando para dashboard...');
